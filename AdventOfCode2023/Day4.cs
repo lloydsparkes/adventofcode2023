@@ -4,12 +4,28 @@ public class Day4 : IDay
 {
     public string RunPartOne(string[] inputLines)
     {
-        return inputLines.Select(Parse).Select(c => 2 ^ (c.MatchCount())).Sum().ToString();
+        var cards = inputLines.Select(Parse).ToList();
+        
+        //cards.ForEach(c => Console.WriteLine(
+        //    $"{c.MatchCount()} = W: {string.Join(',', c.WinningNumbers)} - C: {string.Join(',', c.CardNumbers)}"));
+        
+        return cards.Where(c => c.MatchCount() > 0).Select(c => Math.Pow(2, c.MatchCount()-1)).Sum().ToString();
     }
 
     public string RunPartTwo(string[] inputLines)
     {
-        return "";
+        var cards = inputLines.Select(Parse).ToArray();
+        var counts = cards.Select(c => 1).ToArray();
+
+        for (var i = 0; i < cards.Length; i++)
+        {
+            for (int j = 0; j < cards[i].MatchCount(); j++)
+            {
+                counts[i + j + 1] += counts[i];
+            }
+        }
+
+        return counts.Sum().ToString();
     }
 
     public Card Parse(string line)
@@ -23,6 +39,6 @@ public class Day4 : IDay
 
     public record Card(int[] WinningNumbers, int[] CardNumbers)
     {
-        public int MatchCount() => CardNumbers.Intersect(WinningNumbers).Count();
+        public int MatchCount() => WinningNumbers.Intersect(CardNumbers).Count();
     }
 }
