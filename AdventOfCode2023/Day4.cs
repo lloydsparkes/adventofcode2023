@@ -31,8 +31,8 @@ public class Day4 : IDay
     public Card Parse(string line)
     {
         var bits = line.Split(':')[1].Split('|');
-        var winning = bits[0].Split(' ').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => int.Parse(s.Trim())).ToArray();
-        var numbers = bits[1].Split(' ').Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => int.Parse(s.Trim())).ToArray();
+        var winning = bits[0].GetIntArray();
+        var numbers = bits[1].GetIntArray();
 
         return new Card(winning, numbers);
     }
